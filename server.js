@@ -2,34 +2,31 @@ const express = require("express");
 const app = express();
 const PORT = 8081;
 
+// Crie um projeto que contenha uma rota POST /soma e receba uma quantidade indefinida de números através do body e realize a soma dos valores:
+// Verifique se os valores são numéricos antes de realizar o cálculo, caso não seja informa ao usuário e não realizar o cálculo.
+// Utilize a função reduce, pesquise em fontes na internet a forma de utilizar.
+
 // middleware para utilização de JSON
 app.use(express.json());
 // ==============================================================================
-app.post("/alunos", (req, res) => {
+app.post("/soma", (req, res) => {
   try {
-    const { nome, notas } = req.body;
+    const { num } = req.body;
     // Validacao
-    if (!nome || !notas) {
-      return res.status(400).json({ message: "O nome e as notas são obrigatórios" });
-    }
-    if (notas.length === 0) {
-      return res.status(400).json({ message: "O campo 'notas' deve ter pelo menos uma nota." });
-    }
-    let sum = 0;
-    for (let i = 0; i < notas.length; i++) {
-      if (typeof notas[i] === 'number') { // verifica se é número
-        sum += notas[i];
-      } else {
-        return res.status(400).json({ message: `A nota '${notas[i]}' na posição ${i} não é um número válido.` });
+    if (!num) {
+      return res.status(400).json({ message: "Insira Valores Validos" });
+    } else {
+      for (let i = 0; i < num.length; i++) {
+        if (isNaN(num[i])) {
+          return res.status(400).json({ message: "Insira Apenas Valores Numéricos" });
+        } else {
+          const soma = num.reduce((acumulador, valorAtual) => acumulador + valorAtual,0);
+          return res.status(201).json({ soma: soma });
+        }
       }
     }
-    // retorna a média e a situação
-    const media = sum / notas.length;
-    const situacao = media >= 6 ? "APROVADO" : "REPROVADO";
-    return res.status(200).json({ nome: nome, media: media.toFixed(2), situacao: situacao });
-
   } catch (error) {
-    res.status(500).json({ message: "Erro interno no servidor", errorMessage: error.message });
+    res.status(500).json({errorMessage: error.message});
   }
 });
 // ==============================================================================
