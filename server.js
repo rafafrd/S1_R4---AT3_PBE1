@@ -1,38 +1,35 @@
 const express = require("express");
+const fs = require('fs');
 const app = express();
 const PORT = 8081;
 
 /** 
-  Crie um projeto que contenha uma rota POST /soma e receba uma quantidade indefinida de números através do body e realize a soma dos valores: 
-  Verifique se os valores são numéricos antes de realizar o cálculo, ignore os não númericos, some os demais..
-  Utilize a função reduce, pesquise em fontes na internet a forma de utilizar.
+  Crie um projeto com uma rota POST /usuarios que receba um JSON com:
+  - nome, email e senha;
+  - Nome deve ter no minimo 3 caracteres, email deve conter @ e senha no mínimo 4 caracteres
+  - Salvar o registro em um arquivo usuarios.json na raiz da aplicação (o arquivo deve ser criado através da codificação)
 */
 // middleware para utilização de JSON
 app.use(express.json());
 // ==============================================================================
-app.post("/soma", (req, res) => {
+app.post("/usuarios", (req, res) => {
   try {
-    const { num } = req.body;
+    const { nome, email, senha } = req.body;
     // Validacao
-    if (!num) {
-      return res.status(400).json({ message: "Insira Valores" });
+    if (!nome || !email || !senha) {
+      return res.status(400).json({ message: "Insira Valores válidos" });
     } else {
-      let arrayCerta = [];
-      let soma = 0;
-      // lendo array
-      for (let i = 0; i < num.length; i++) {
-        if (isNaN(num[i])) {
-          console.log(`${num[i]} não é um num`);
-          continue; // pula pro próximo
-        } else {
-          arrayCerta[i] = Number(num[i]);
-          console.log("arrayCerta", arrayCerta);
-          // Utilizando reduce
-          soma = arrayCerta.reduce((acumulador, valorAtual) => acumulador + valorAtual, 0);
-          console.log("soma", soma);
+      if (nome.length < 3) {
+        return res.status(400).json({ message: "Nome deve ter no mínimo 3 caracteres" });
+      } else if (!email.includes("@")) {
+        return res.status(400).json({ message: "Email deve conter @" });
+      } else if (senha.length < 4) {
+        return res.status(400).json({ message: "Senha deve ter no mínimo 4 caracteres" });
+      } else {
+        const novoUsuario = { nome, email, senha };
+        let usuarios = [];
         }
-      }
-      return res.status(201).json({ soma: soma });
+      // return res.status(201).json({ message: "Salvo!"  });
     }
   } catch (error) {
     res.status(500).json({errorMessage: error.message});
