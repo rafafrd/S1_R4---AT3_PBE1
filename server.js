@@ -11,22 +11,22 @@ app.use(express.json());
 // ==============================================================================
 app.post("/soma", (req, res) => {
   try {
-    const { num } = req.body;
+    const { num } = req.body; // transformar dados em variaveis
     // Validacao
     if (!num) {
       return res.status(400).json({ message: "Insira Valores Validos" });
     } else {
-      for (let i = 0; i < num.length; i++) {
+      for (let i = 0; i < num.length; i++) { // lendo dados
         if (isNaN(num[i])) {
-          return res.status(400).json({ message: "Insira Apenas Valores Numéricos" });
+          return res.status(400).json({ message: "Insira Apenas Valores Numéricos" }); // quebra se for True
         } else {
-          const soma = num.reduce((acumulador, valorAtual) => acumulador + valorAtual,0);
+          const soma = num.reduce((acumulador, valorAtual) => acumulador + valorAtual,0); // add no acumulador o valor atual do loop ([i])
           return res.status(201).json({ soma: soma });
         }
       }
     }
   } catch (error) {
-    res.status(500).json({errorMessage: error.message});
+    res.status(500).json({errorMessage: error.message}); // erro no server
   }
 });
 // ==============================================================================
