@@ -12,7 +12,7 @@ app.use(express.json());
 // ==============================================================================
 app.post("/soma", (req, res) => {
   try {
-    const { num } = req.body;
+    const { num } = req.body; // transforma dados em variaveis
     // Validacao
     if (!num) {
       return res.status(400).json({ message: "Insira Valores" });
@@ -22,20 +22,20 @@ app.post("/soma", (req, res) => {
       // lendo array
       for (let i = 0; i < num.length; i++) {
         if (isNaN(num[i])) {
-          console.log(`${num[i]} não é um num`);
+          console.log(`${num[i]} não é um número`);
           continue; // pula pro próximo
         } else {
           arrayCerta[i] = Number(num[i]);
-          console.log("arrayCerta", arrayCerta);
+          console.log("arrayCerta: ", arrayCerta);
           // Utilizando reduce
-          soma = arrayCerta.reduce((acumulador, valorAtual) => acumulador + valorAtual, 0);
+          soma = arrayCerta.reduce((acumulador, valorAtual) => acumulador + valorAtual, 0); // depois da verificação adiciona o valor na soma em formato de acumulador
           console.log("soma", soma);
         }
       }
       return res.status(201).json({ soma: soma });
     }
   } catch (error) {
-    res.status(500).json({errorMessage: error.message});
+    res.status(500).json({errorMessage: error.message}); // erro no server
   }
 });
 // ==============================================================================
